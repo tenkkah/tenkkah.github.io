@@ -1,0 +1,602 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>            DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up - Aitor      Ciberseguridad y Hacking Ético      </title>
+<meta name="description" content="En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Aitor | Ciberseguridad y Hacking Ético">
+<meta property="og:title" content="DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up">
+<meta property="og:url" content="http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/">
+
+
+  <meta property="og:description" content="En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-08-31T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Aitorgg02",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Aitor | Ciberseguridad y Hacking Ético Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Artículos</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categorías</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Etiquetas</a>
+            </li><li class="masthead__menu-item">
+              <a href="/buscador/" >Buscador</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="Aitorgg02" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Aitorgg02</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        CyberSecurity and Web Developer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/aitor-gonzález-gonzález-44b836189" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/aitorgg02" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up">
+    <meta itemprop="description" content="En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:">
+    <meta itemprop="datePublished" content="August 31, 2022">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2022-08-31T00:00:00+02:00">August 31, 2022 </time>&emsp;
+          
+          
+        </p>
+        <p>En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/1.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Para resolver el laboratorio, tenemos que enviar a una víctima un exploit que aproveche la vulnerabilidad del laboratorio para ejecutar la función <code class="language-plaintext highlighter-rouge">print()</code>.</p>
+
+<p>Lo primero de todo es acceder al laboratorio:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/2.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>En este caso, no vemos ninguna barra de búsqueda o página de feedback como ha ocurrido en otros retos de XSS. Sin embargo, si nos vamos al código fuente, nos encontramos con el siguiente trozo de código:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/3.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Este código, básicamente lo que hace es que cuando se especifica en la URL algo después de un hashtag, busca este valor en la web y hace un scroll hasta la coincidencia.</p>
+
+<p>Por ejemplo, si nos vamos abajo del todo del laboratorio, podemos ver como hay un post que tiene la palabra “Resume” en el título:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/4.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Sabiendo esto, vamos a buscar por:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ &lt;URL&gt;/#Resume
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/5.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Damos enter.</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/6.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Y aunque en la imagen no se pueda apreciar, nos redirige automáticamente hacia el post que contiene la palabra.</p>
+
+<p>Para ver como explotar esto, vamos a traer el código de nuevo:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/7.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Como podemos observar, realmente lo que ocurre en el código, es que cuando especificamos algo después del hashtag, jQuery intenta busca un elemento h2 que contenga lo que hemos dicho. Cuando encuentra el elemento, este se almacena en la variable post, por lo que ahora, lo que contiene es un elemento de jQuery que se ve de la siguiente forma:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/8.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Posteriormente, si la variable post tiene algun dato almacenado, se obtiene el primer elemento del objeto jQuery y se usa el método scrollIntoView().</p>
+
+<p>Aqui la vulnerabilidad como tal, se encuentra en la primera linea, en el selector sink de jQuery <code class="language-plaintext highlighter-rouge">($())</code>:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/9.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/10.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Si no se sanitiza bien, lo que ocurre en aproximadamente en el código es lo siguiente:</p>
+<ul>
+  <li>$(‘section.blog-list h2:contains(‘ + decodeURIComponent(window.location.hash.slice(1)) + ‘)’);</li>
+  <li>$(‘section.blog-list h2:contains(‘ + Hola + ‘)’);</li>
+</ul>
+
+<p>Por lo tanto, si ponemos un payload como el siguiente:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ &lt;img src=/ onerror=print()&gt;
+</code></pre></div></div>
+
+<p>Mas o menos, ocurriría algo así:</p>
+<ul>
+  <li>$(‘section.blog-list h2:contains(‘ + &lt;img src=/ onerror=print()&gt; + ‘)’);</li>
+</ul>
+
+<p>De esta forma, se interpretaría. Vamos a probarlo:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/11.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Damos enter:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/12.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Y efectivamente se ejecuta. Ahora tenemos que crear un exploit que mandemos a la víctima y se haga uso de esta vulnerabilidad. Para ello nos vamos al servidor del exploit:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/13.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/14.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>En este caso, la idea es automatizar la explotación usando un simple <code class="language-plaintext highlighter-rouge">&lt;iframe&gt;</code>:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/15.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Antes de enviarlo vamos a ver como se vería:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/16.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/17.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>La victima al visitar una web con nuestro código, vería lo que estamos viendo, un pequeño iframe de la web, e inmediatamente después de que cargase la web, se ejecutaría la <code class="language-plaintext highlighter-rouge">función print()</code>:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/18.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Por lo que, viendo que funciona. Simplemente lo guardamos y lo enviamos a la víctima:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/19.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/20.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>De esta forma, conseguimos resolver el laboratorio:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/21.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/22.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>¡Un saludo y espero que os sirva de apoyo!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#burpsuite" class="page__taxonomy-item" rel="tag">Burpsuite</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#javascript" class="page__taxonomy-item" rel="tag">JavaScript</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#xss" class="page__taxonomy-item" rel="tag">XSS</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#portswigger" class="page__taxonomy-item" rel="tag">Portswigger</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Fecha:</strong> <time datetime="2022-08-31T00:00:00+02:00">August 31, 2022</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/dom-xss-jquery-href-attribute-sink-using-location/" class="pagination--pager" title="DOM XSS in jQuery anchor href attribute sink using location.search source – PortSwigger Write Up
+">Previous</a>
+    
+    
+      <a href="/dom-xss-sink-using-location-search/" class="pagination--pager" title="DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Aitorgg02</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-08-31T15:42:22+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aitor | Ciberseguridad y Hacking Ético</title><subtitle>Artículos sobre ciberseguridad, CTF y desarrollo web</subtitle><author><name>Aitorgg02</name></author><entry><title type="html">DOM XSS in document.write sink using source location.search – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-document.write-sink/" rel="alternate" type="text/html" title="DOM XSS in document.write sink using source location.search – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-document.write-sink</id><content type="html" xml:base="http://localhost:4000/dom-xss-document.write-sink/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in document.write sink using source location.search”:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-09-01T00:10:07+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aitor | Ciberseguridad y Hacking Ético</title><subtitle>Artículos sobre ciberseguridad, CTF y desarrollo web</subtitle><author><name>Aitorgg02</name></author><entry><title type="html">DOM XSS in document.write sink using source location.search – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-document.write-sink/" rel="alternate" type="text/html" title="DOM XSS in document.write sink using source location.search – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-document.write-sink</id><content type="html" xml:base="http://localhost:4000/dom-xss-document.write-sink/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in document.write sink using source location.search”:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
      &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/1.png&quot; width=&quot;1000&quot; /&gt;
@@ -140,7 +140,178 @@
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery anchor href attribute sink using location.search source”:</summary></entry><entry><title type="html">DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-sink-using-location-search/" rel="alternate" type="text/html" title="DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-sink-using-location-search</id><content type="html" xml:base="http://localhost:4000/dom-xss-sink-using-location-search/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in innerHTML sink using source location.search”:&lt;/p&gt;
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery anchor href attribute sink using location.search source”:</summary></entry><entry><title type="html">DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/" rel="alternate" type="text/html" title="DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event</id><content type="html" xml:base="http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Para resolver el laboratorio, tenemos que enviar a una víctima un exploit que aproveche la vulnerabilidad del laboratorio para ejecutar la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;print()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, no vemos ninguna barra de búsqueda o página de feedback como ha ocurrido en otros retos de XSS. Sin embargo, si nos vamos al código fuente, nos encontramos con el siguiente trozo de código:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Este código, básicamente lo que hace es que cuando se especifica en la URL algo después de un hashtag, busca este valor en la web y hace un scroll hasta la coincidencia.&lt;/p&gt;
+
+&lt;p&gt;Por ejemplo, si nos vamos abajo del todo del laboratorio, podemos ver como hay un post que tiene la palabra “Resume” en el título:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Sabiendo esto, vamos a buscar por:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;URL&amp;gt;/#Resume
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Damos enter.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y aunque en la imagen no se pueda apreciar, nos redirige automáticamente hacia el post que contiene la palabra.&lt;/p&gt;
+
+&lt;p&gt;Para ver como explotar esto, vamos a traer el código de nuevo:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Como podemos observar, realmente lo que ocurre en el código, es que cuando especificamos algo después del hashtag, jQuery intenta busca un elemento h2 que contenga lo que hemos dicho. Cuando encuentra el elemento, este se almacena en la variable post, por lo que ahora, lo que contiene es un elemento de jQuery que se ve de la siguiente forma:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Posteriormente, si la variable post tiene algun dato almacenado, se obtiene el primer elemento del objeto jQuery y se usa el método scrollIntoView().&lt;/p&gt;
+
+&lt;p&gt;Aqui la vulnerabilidad como tal, se encuentra en la primera linea, en el selector sink de jQuery &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;($())&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Si no se sanitiza bien, lo que ocurre en aproximadamente en el código es lo siguiente:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$(‘section.blog-list h2:contains(‘ + decodeURIComponent(window.location.hash.slice(1)) + ‘)’);&lt;/li&gt;
+  &lt;li&gt;$(‘section.blog-list h2:contains(‘ + Hola + ‘)’);&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Por lo tanto, si ponemos un payload como el siguiente:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;img src=/ onerror=print()&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Mas o menos, ocurriría algo así:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$(‘section.blog-list h2:contains(‘ + &amp;lt;img src=/ onerror=print()&amp;gt; + ‘)’);&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;De esta forma, se interpretaría. Vamos a probarlo:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Damos enter:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y efectivamente se ejecuta. Ahora tenemos que crear un exploit que mandemos a la víctima y se haga uso de esta vulnerabilidad. Para ello nos vamos al servidor del exploit:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/13.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/14.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, la idea es automatizar la explotación usando un simple &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;iframe&amp;gt;&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/15.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Antes de enviarlo vamos a ver como se vería:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/16.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/17.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;La victima al visitar una web con nuestro código, vería lo que estamos viendo, un pequeño iframe de la web, e inmediatamente después de que cargase la web, se ejecutaría la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función print()&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/18.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Por lo que, viendo que funciona. Simplemente lo guardamos y lo enviamos a la víctima:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/19.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/20.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/21.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/22.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:</summary></entry><entry><title type="html">DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-sink-using-location-search/" rel="alternate" type="text/html" title="DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-sink-using-location-search</id><content type="html" xml:base="http://localhost:4000/dom-xss-sink-using-location-search/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in innerHTML sink using source location.search”:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
      &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/1.png&quot; width=&quot;1000&quot; /&gt;

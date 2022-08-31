@@ -9,6 +9,11 @@ var store = [{
         "tags": ["Burpsuite","JavaScript","XSS"],
         "url": "http://localhost:4000/dom-xss-jquery-href-attribute-sink-using-location/",
         "teaser":null},{
+        "title": "DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up",
+        "excerpt":"En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”: Para resolver el laboratorio, tenemos que enviar a una víctima un exploit que aproveche la vulnerabilidad del laboratorio para ejecutar la función print(). Lo primero de todo es acceder al laboratorio:...","categories": ["Portswigger"],
+        "tags": ["Burpsuite","JavaScript","XSS"],
+        "url": "http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/",
+        "teaser":null},{
         "title": "DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up",
         "excerpt":"En este post vamos a estar resolviendo el laboratorio: “DOM XSS in innerHTML sink using source location.search”: Lo primero de todo como siempre es acceder al laboratorio: Una vez accedido, vemos una barra de búsqueda. Por lo que vamos a buscar cualquier cosa: Si nos fijamos, lo que hemos buscado...","categories": ["Portswigger"],
         "tags": ["Burpsuite","JavaScript","XSS"],
