@@ -1,475 +1,809 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-09-01T00:10:07+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aitor | Ciberseguridad y Hacking Ético</title><subtitle>Artículos sobre ciberseguridad, CTF y desarrollo web</subtitle><author><name>Aitorgg02</name></author><entry><title type="html">DOM XSS in document.write sink using source location.search – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-document.write-sink/" rel="alternate" type="text/html" title="DOM XSS in document.write sink using source location.search – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-document.write-sink</id><content type="html" xml:base="http://localhost:4000/dom-xss-document.write-sink/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in document.write sink using source location.search”:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-09-05T13:24:02+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aitor | Ciberseguridad y Hacking Ético</title><subtitle>Artículos sobre ciberseguridad, CTF y desarrollo web</subtitle><author><name>Aitorgg02</name></author><entry><title type="html">DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-angular-expression-angle-brackets-and-double-quotes-html/" rel="alternate" type="text/html" title="DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded – PortSwigger Write Up" /><published>2022-09-05T00:00:00+02:00</published><updated>2022-09-05T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-angular-expression-angle-brackets-and-double-quotes-html</id><content type="html" xml:base="http://localhost:4000/dom-xss-angular-expression-angle-brackets-and-double-quotes-html/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded.”&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/1.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Cuando abrimos el lab, lo primero que nos encontramos es la siguiente web:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Hay una barra de búsqueda, por lo que vamos a probar a simplemente buscar algo:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando hacemos la búsqueda, si damos click derecho y vemos el código fuente del elemento de la palabra por la que hemos buscado, podremos ver que se sitúa en el atributo src de una imagen.&lt;/p&gt;
-
-&lt;p&gt;Observando el como se implementa nuestro input en el código fuente, podemos enviar un payload especializado que se escape del tag &lt;img /&gt;.&lt;/p&gt;
-
-&lt;p&gt;Por ejemplo vamos a usar:&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &quot;&amp;gt;&amp;lt;script&amp;gt;alert(”XSS”)&amp;lt;/script&amp;gt;//
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando hemos escrito nuestro payload, simplemente volvemos a hacer una búsqueda:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y como vemos, se nos ejecuta el código que hemos introducido. El código fuente se vería ahora de la siguiente forma:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Como vemos, nuestro input ya no se encuentra dentro del &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;img&amp;gt;&lt;/code&gt;, ya que hemos conseguido cerrar el elemento para escribir código JavaScript.&lt;/p&gt;
-
-&lt;p&gt;Con esto hecho, conseguimos resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_document.write_sink_using_source/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in document.write sink using source location.search”:</summary></entry><entry><title type="html">DOM XSS in jQuery anchor href attribute sink using location.search source – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-jquery-href-attribute-sink-using-location/" rel="alternate" type="text/html" title="DOM XSS in jQuery anchor href attribute sink using location.search source – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-jquery-href-attribute-sink-using-location</id><content type="html" xml:base="http://localhost:4000/dom-xss-jquery-href-attribute-sink-using-location/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery anchor href attribute sink using location.search source”:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, para resolver el laboratorio tenemos que ejecutar un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt; que nos devuelva las cookies.&lt;/p&gt;
+&lt;p&gt;En este caso, se nos indica que la web usa Angular, y que, además, existe un DOM based XSS en la funcionalidad de búsqueda. Para completar el laboratorio, tenemos que ejecutar la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/2.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Una vez accedidos, nos dirigimos a la parte de enviar feedback, ya que, en el enunciado es donde se nos indica que se encuentra el XSS:&lt;/p&gt;
+&lt;p&gt;Una vez accedidos, probamos la funcionalidad de búsqueda:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando accedemos, si nos fijamos en la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;URL&lt;/code&gt;, podemos ver que de forma por defecto se nos añade el parámetro &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;returnPath&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Vamos a probar a añadirle cualquier valor al parámetro:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En principio no pasa nada, pero si ponemos el ratón encima del hiperenlace de “Back”:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Vemos como el valor que hemos colocado en la variable, se implemente en el atributo href de este elemento. Por lo que es tan sencillo como colocar un payload que nos ejecute el alert cuando demos click en el botón:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ javascript:alert(document.cookie)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Como vemos, conseguimos resolver el laboratorio, y desde el punto de vista del código fuente, lo que hemos conseguido es lo siguiente:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/9.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Ahora, si damos click en el hiperenlace “Back”:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/10.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Se nos ejecutará el código Javascript que hemos indicado:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_jquery_ anchor_href_attribute_sink_using_location.search_source/11.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery anchor href attribute sink using location.search source”:</summary></entry><entry><title type="html">DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/" rel="alternate" type="text/html" title="DOM XSS in jQuery selector sink using a hashchange event – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event</id><content type="html" xml:base="http://localhost:4000/dom-xss-jquery-selector-sink-hashchange-event/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Para resolver el laboratorio, tenemos que enviar a una víctima un exploit que aproveche la vulnerabilidad del laboratorio para ejecutar la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;print()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, no vemos ninguna barra de búsqueda o página de feedback como ha ocurrido en otros retos de XSS. Sin embargo, si nos vamos al código fuente, nos encontramos con el siguiente trozo de código:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Este código, básicamente lo que hace es que cuando se especifica en la URL algo después de un hashtag, busca este valor en la web y hace un scroll hasta la coincidencia.&lt;/p&gt;
-
-&lt;p&gt;Por ejemplo, si nos vamos abajo del todo del laboratorio, podemos ver como hay un post que tiene la palabra “Resume” en el título:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Sabiendo esto, vamos a buscar por:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;URL&amp;gt;/#Resume
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Damos enter.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y aunque en la imagen no se pueda apreciar, nos redirige automáticamente hacia el post que contiene la palabra.&lt;/p&gt;
-
-&lt;p&gt;Para ver como explotar esto, vamos a traer el código de nuevo:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Como podemos observar, realmente lo que ocurre en el código, es que cuando especificamos algo después del hashtag, jQuery intenta busca un elemento h2 que contenga lo que hemos dicho. Cuando encuentra el elemento, este se almacena en la variable post, por lo que ahora, lo que contiene es un elemento de jQuery que se ve de la siguiente forma:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Posteriormente, si la variable post tiene algun dato almacenado, se obtiene el primer elemento del objeto jQuery y se usa el método scrollIntoView().&lt;/p&gt;
-
-&lt;p&gt;Aqui la vulnerabilidad como tal, se encuentra en la primera linea, en el selector sink de jQuery &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;($())&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/9.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/10.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Si no se sanitiza bien, lo que ocurre en aproximadamente en el código es lo siguiente:&lt;/p&gt;
+&lt;p&gt;En principio no se ve nada raro. Sin embargo, si miramos el código fuente:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Podemos ver como en el body se establece un atributo el cual es &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ng-app&lt;/code&gt;. Ng-app es una directiva que se define un elemento raiz de angular, y, por tanto, define que comienza la aplicación de angular.&lt;/p&gt;
+
+&lt;p&gt;Claro, definiendo en el tag body de HTML que empieza la aplicación de angular, en todo el código que haya dentro, se interpretará cualquier sentencia de angular que se añada. Y gracias a la funcionalidad de búsqueda, podemos controlar un parámetro que se colocará dentro de la parte definida como aplicación de angular.&lt;/p&gt;
+
+&lt;p&gt;Sabiendo esto, usaremos el payload:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a explicar el payload:&lt;/p&gt;
+
 &lt;ul&gt;
-  &lt;li&gt;$(‘section.blog-list h2:contains(‘ + decodeURIComponent(window.location.hash.slice(1)) + ‘)’);&lt;/li&gt;
-  &lt;li&gt;$(‘section.blog-list h2:contains(‘ + Hola + ‘)’);&lt;/li&gt;
+  &lt;li&gt;Los dobles corchetes sirven para que se trate como una expresión de angular.&lt;/li&gt;
+  &lt;li&gt;El &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;constructor.constructor&lt;/code&gt;, básicamente se interpreta igual que una función, es como si declarásemos una función y dentro de esta colocáramos el código que se ejecutará, pues aquí es exactamente lo mismo, dentro de los paréntesis, colocamos lo que queremos que se ejecute, en este caso un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert(1)&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Por lo tanto, si ponemos un payload como el siguiente:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;img src=/ onerror=print()&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Mas o menos, ocurriría algo así:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;$(‘section.blog-list h2:contains(‘ + &amp;lt;img src=/ onerror=print()&amp;gt; + ‘)’);&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;De esta forma, se interpretaría. Vamos a probarlo:&lt;/p&gt;
+&lt;p&gt;Sabiendo esto, mandamos el payload mencionado, ya que recordemos que este se verá reflejado dentro de la parte que es declarada como angular gracias al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ng-app&lt;/code&gt;:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/11.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Damos enter:&lt;/p&gt;
+&lt;p&gt;Y, por lo tanto, se interpretará como hemos explicado y ejecutará:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/12.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y efectivamente se ejecuta. Ahora tenemos que crear un exploit que mandemos a la víctima y se haga uso de esta vulnerabilidad. Para ello nos vamos al servidor del exploit:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/13.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/14.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, la idea es automatizar la explotación usando un simple &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;iframe&amp;gt;&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/15.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Antes de enviarlo vamos a ver como se vería:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/16.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/17.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;La victima al visitar una web con nuestro código, vería lo que estamos viendo, un pequeño iframe de la web, e inmediatamente después de que cargase la web, se ejecutaría la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función print()&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/18.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Por lo que, viendo que funciona. Simplemente lo guardamos y lo enviamos a la víctima:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/19.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/20.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/21.png&quot; width=&quot;1000&quot; /&gt;
+     &amp;lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/9.png&quot; width=&quot;1&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded.</summary></entry><entry><title type="html">DOM XSS in document.write sink using source location.search inside a select element – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-documentwrite-sink-using-location-search-inside-select-element/" rel="alternate" type="text/html" title="DOM XSS in document.write sink using source location.search inside a select element – PortSwigger Write Up" /><published>2022-09-05T00:00:00+02:00</published><updated>2022-09-05T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-documentwrite-sink-using-location-search-inside-select-element</id><content type="html" xml:base="http://localhost:4000/dom-xss-documentwrite-sink-using-location-search-inside-select-element/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in document.write sink using source location.search inside a select element.”&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, para resolver el reto tenemos que escaparnos del elemento “select” y llamar a la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez hemos accedido, podemos ver varios productos. Vamos a entrar en uno cualquiera:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cuando entramos, podemos observar una función para comprobar el stock en las distintas ciudades:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/4.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_jquery_selector_sink_haschange_event/22.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in jQuery selector sink using a hashchange event”:</summary></entry><entry><title type="html">DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-sink-using-location-search/" rel="alternate" type="text/html" title="DOM XSS in innerHTML sink using source location.search – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-sink-using-location-search</id><content type="html" xml:base="http://localhost:4000/dom-xss-sink-using-location-search/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio: “DOM XSS in innerHTML sink using source location.search”:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo como siempre es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedido, vemos una barra de búsqueda. Por lo que vamos a buscar cualquier cosa:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/3.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/5.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/4.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/6.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Si nos fijamos, lo que hemos buscado se ve reflejado en la web. Y si damos click derecho y vemos la parte del código fuente donde se situa, vemos que se almacena en el innerHTML del tag &lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Si observamos el código fuente de la web, podemos encontrar el siguiente código:&lt;/p&gt;
 
-&lt;p&gt;Por lo que conociendo esto, podemos intentar usar en la búsqueda un payload especialmente diseñado para escaparnos de este tag, y ejecutar código Javascript. Por ejemplo, usaremos el siguiente payload:&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Por ejemplo vamos a usar:&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;/span&amp;gt;&amp;lt;img src=/ onerror=alert(1) /&amp;gt;//
+&lt;p&gt;Analizando un poco el script, básicamente se entiende que además de las tres ciudades por defecto para comprobar el stock, se le puede agregar una más a través de la variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;storeId&lt;/code&gt; de la URL. Por lo que podemos probar a añadir esa variable y un valor cualquiera:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedemos a la web de nuevo pero con la variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;storeId&lt;/code&gt;, si nos fijamos en las ciudades:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Podemos ver como se ha agregado una más, en concreto una con el nombre del valor que le hemos pasado a la variable.&lt;/p&gt;
+
+&lt;p&gt;Si nos vamos de nuevo al código fuente, podemos observar como este parámetro se implementa:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Por lo que, observando esto, podemos intentar poner un valor que ocasione que nos escapemos del propio elemento &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;options&lt;/code&gt;, y ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Al acceder a la web con este valor en la variable:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Se nos ejecuta el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;. En el código fuente, podemos observar lo siguiente:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/13.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y de esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/14.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in document.write sink using source location.search inside a select element.</summary></entry><entry><title type="html">Reflected XSS into attribute with angle brackets HTML-encoded – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-xss-into-attribute-angle-brackets-html-encoded/" rel="alternate" type="text/html" title="Reflected XSS into attribute with angle brackets HTML-encoded – PortSwigger Write Up" /><published>2022-09-05T00:00:00+02:00</published><updated>2022-09-05T00:00:00+02:00</updated><id>http://localhost:4000/reflected-xss-into-attribute-angle-brackets-html-encoded</id><content type="html" xml:base="http://localhost:4000/reflected-xss-into-attribute-angle-brackets-html-encoded/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into attribute with angle brackets HTML-encoded.”&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, para resolver el reto tenemos que inyectar un atributo que nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedemos, nos encontramos ante una barra de búsqueda, por lo que vamos a usarla buscando una palabra aleatoria:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cuando buscamos, si nos fijamos aquí ocurren varias cosas:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;En este caso no hay resultados, pero eso es lo de menos.&lt;/li&gt;
+  &lt;li&gt;En la URL se nos añade el parámetro &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;search&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Lo que buscamos, acaba siendo el valor del atributo &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value&lt;/code&gt; en el elemento &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Teniendo en cuenta los dos últimos puntos, podemos crear un payload que nos cree un nuevo atributo dentro del elemento input para que se nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;. En este caso el payload es:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;“onmousemove=”alert(1)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;De esta forma, buscando por el payload que hemos especificado arriba, conseguimos resolver el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Parece que no ha ocurrido nada a nivel de ejecutar el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;, sin embargo, si pasamos el ratón por encima de la palabra:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Se nos ejecuta. De esta forma conseguimos resolver el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into attribute with angle brackets HTML-encoded.</summary></entry><entry><title type="html">Stored XSS into anchor href attribute with double quotes HTML-encoded – PortSwigger Write Up</title><link href="http://localhost:4000/stored-xss-into-anchor-attribute-double-quotes-html-encoded/" rel="alternate" type="text/html" title="Stored XSS into anchor href attribute with double quotes HTML-encoded – PortSwigger Write Up" /><published>2022-09-04T00:00:00+02:00</published><updated>2022-09-04T00:00:00+02:00</updated><id>http://localhost:4000/stored-xss-into-anchor-attribute-double-quotes-html-encoded</id><content type="html" xml:base="http://localhost:4000/stored-xss-into-anchor-attribute-double-quotes-html-encoded/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored XSS into anchor href attribute with double quotes HTML-encoded.”&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, para resolver el laboratorio tenemos que escribir un comentario que llame a la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función alert&lt;/code&gt; cuando se haga click en el nombre del autor del comentario.&lt;/p&gt;
+
+&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedemos, podemos ver como hay distintos artículos, nos metemos en el primero de ellos (podríamos meternos en cualquiera):&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez dentro, podemos observar que hay una zona de comentarios:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Por lo que vamos a escribir un comentario cualquiera:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cuando enviamos un comentario, este se escribe y almacena en la web. Podemos observar como en el comentario que hemos puesto hay un hipervínculo. Si vemos su código fuente, podemos observar como el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;atributo href&lt;/code&gt; corresponde al campo de “Website” de cuando se escribe un comentario:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/9.png&quot; width=&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Por lo que sabiendo esto, podemos escribir en el campo de “Website” un payload que nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt; cuando se de click en el nombre del autor:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/10.png&quot; width=&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Enviamos el comentario y…&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/11.png&quot; width=&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Completamos el laboratorio! Si volvemos a la zona de comentarios y observamos el código fuente, podemos ver como se ha colocado nuestro payload:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/12.png&quot; width=&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y si damos click en “test”:&lt;/p&gt;
+
+&lt;p&gt;¡Se nos ejecuta!&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/13.png&quot; width=&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored XSS into anchor href attribute with double quotes HTML-encoded.</summary></entry><entry><title type="html">Reflected DOM XSS – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-dom-xss/" rel="alternate" type="text/html" title="Reflected DOM XSS – PortSwigger Write Up" /><published>2022-09-04T00:00:00+02:00</published><updated>2022-09-04T00:00:00+02:00</updated><id>http://localhost:4000/reflected-dom-xss</id><content type="html" xml:base="http://localhost:4000/reflected-dom-xss/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected DOM XSS.”&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso se nos indica que el servidor procesa los datos de una petición y lo muestra los datos de la respuesta. Posteriormente, un script de la página procesa los datos reflejados de una forma insegura. Para resolver el laboratorio debemos de ejecutar la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función alert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Dicho esto, lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedidos, podemos observar un formulario que nos permite buscar en el blog. Para analizar mejor el comportamiento de esta funcionalidad, abrimos el burp suite y activamos el proxy en el navegador:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con esto hecho, probamos a hacer cualquier búsqueda:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cuando damos a “Buscar”, se genera la petición que podemos observar arriba. No hay mucha información, además de que en el enunciado nos hacen el spoiler de que la vulnerabilidad está en un script inseguro, por lo que podemos suponer que la primera petición de búsqueda no tiene mucha historia, por lo que simplemente la enviamos.&lt;/p&gt;
+
+&lt;p&gt;Cuando enviamos la primera petición de búsqueda, si mantenemos el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;intercept&lt;/code&gt; del burp suite puesto, interceptaremos la siguiente petición:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Esta tiene pinta que ha sido generada por el frontend del recurso que se solicitó en la primera petición &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(/?search=test)&lt;/code&gt;. Para analizar mejor su respuesta, la pasamos al repeater:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;El servidor nos devuelve una respuesta en formato JSON, donde en la parte inferior podemos observar el término de búsqueda que hemos colocado.&lt;/p&gt;
+
+&lt;p&gt;Podemos probar a intentar escaparnos del contexto del JSON en este caso, por ejemplo, a intentar meter un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En la respuesta podemos observar como en principio parece que sin problemas podemos inyectar y escaparnos del JSON, ya que no hay ningun tipo de sanitización, por lo que, usando el payload de arriba, lo colocamos en la petición que dejamos en el proxy, y lo enviamos:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;De esta manera, conseguimos obtener un XSS y resolver el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/13.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected DOM XSS.</summary></entry><entry><title type="html">Stored DOM XSS – PortSwigger Write Up</title><link href="http://localhost:4000/stored-dom-xss/" rel="alternate" type="text/html" title="Stored DOM XSS – PortSwigger Write Up" /><published>2022-09-04T00:00:00+02:00</published><updated>2022-09-04T00:00:00+02:00</updated><id>http://localhost:4000/stored-dom-xss</id><content type="html" xml:base="http://localhost:4000/stored-dom-xss/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored DOM XSS.”&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, el enunciado nos dice que existe una vulnerabilidad de XSS del tipo DOM almacenado en la funcionalidad de comentario del blog. Para resolver el laboratorio debemos de explotar la vulnerabilidad y ejecutar la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Dicho esto, lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedidos, podemos observar como hay distintos artículos, en este caso, vamos a ver el primero:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Al acceder a un artículo, podemos observar como hay una zona de comentarios:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, simplemente vamos a llenarla con datos random y a publicar un comentario:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez publicado, volvemos al artículo para ver nuestro comentario:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Sin problemas se ha publicado.&lt;/p&gt;
+
+&lt;p&gt;Si investigamos un poco el código fuente y las distintas dependencias (archivos JS), podemos encontrar el siguiente archivo de JavaScript, llamado &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;loadComments.js&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;El archivo, entre otras cosas, posee una función que reemplaza los simbolos &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; y &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;&lt;/code&gt;, HTML encodeandolos cuando se carga los comentarios.&lt;/p&gt;
+
+&lt;p&gt;Aquí es donde está el fallo, está usando el método &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replace&lt;/code&gt; para la sustitución. Este método únicamente reemplaza la primera ocurrencia que encuentra, por ejemplo, si tengo la palabra patata y utilizo la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replace&lt;/code&gt; para sustituir las &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;‘a’&lt;/code&gt; por una &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;‘e’&lt;/code&gt;, el resultado de implementar este método en la palabra patata dará como resultado: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;petata&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Por lo que, teniendo en cuenta este funcionamiento, podemos crear un payload típico de XSS, pero colocando al principio de este &amp;lt;&amp;gt; para que sean los que el script sustituya y no los símbolos usados en el código malicioso:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;De esta manera, al publicar el comentario y volver al post:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Conseguimos ejecutar el código javascript que habiamos puesto, en este caso, el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/13.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/14.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;
+¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored DOM XSS.</summary></entry><entry><title type="html">Reflected XSS into a JavaScript string with angle brackets HTML encoded – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-xss-javascript-string-angle-brackets/" rel="alternate" type="text/html" title="Reflected XSS into a JavaScript string with angle brackets HTML encoded – PortSwigger Write Up" /><published>2022-09-03T00:00:00+02:00</published><updated>2022-09-03T00:00:00+02:00</updated><id>http://localhost:4000/reflected-xss-javascript-string-angle-brackets</id><content type="html" xml:base="http://localhost:4000/reflected-xss-javascript-string-angle-brackets/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into a JavaScript string with angle brackets HTML encoded.”&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso, para resolver el reto tenemos que inyectar un payload que escape del string donde se encuentra y llame a la función alert.&lt;/p&gt;
+
+&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedemos, nos encontramos ante una barra de búsqueda, por lo que vamos a usarla buscando una palabra aleatoria:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cuando hacemos la búsqueda, podemos observar como la palabra que hemos buscado, se encuentra, entre otros sitios en la siguiente parte del código fuente.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Como podemos observar, es un string. Puedes pensar, ok, cierro la variable, pongo un alert y listo, una cosa así:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;var searchTerms= ‘ alert(‘XSS’) ‘&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pero esto no es válido, ya que JavaScript no permite espacios en una variable, por esa misma razón para que toda la cadena se tome como parte de la variable, y aun así, el alert se ejecute, se concatena usando un guion. En el siguiente &amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Dicho esto, colocamos un payload como:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;’ ‘-alert(‘XSS’)-‘ ‘&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y cuando le demos a buscar:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Se habrá ejecutado el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;. En el código fuente, se verá de la siguiente forma:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con esto, completamos el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into a JavaScript string with angle brackets HTML encoded.</summary></entry><entry><title type="html">SQL injection vulnerability allowing login bypass – PortSwigger Write Up</title><link href="http://localhost:4000/sql-injection-vulnerability-allowing-login-bypass/" rel="alternate" type="text/html" title="SQL injection vulnerability allowing login bypass – PortSwigger Write Up" /><published>2022-09-03T00:00:00+02:00</published><updated>2022-09-03T00:00:00+02:00</updated><id>http://localhost:4000/sql-injection-vulnerability-allowing-login-bypass</id><content type="html" xml:base="http://localhost:4000/sql-injection-vulnerability-allowing-login-bypass/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection vulnerability allowing login bypass.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Dirígete a la página de inicio de sesión.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cuando ingresamos un nombre de usuario y contraseña, la cadena de consulta se verá así:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM users WHERE username = ‘administrator’ AND password = ‘password’
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
+&lt;p&gt;Ingresé una comilla simple en el nombre de usuario e inicio de sesión (lo mismo con la contraseña). Ambos dan como resultado un error interno del servidor, lo que muestra que podría ser vulnerable a la inyección de SQL.&lt;/p&gt;
+
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/5.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/2.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;En este caso si ingreso: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;administrator’&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1=1--&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;Al buscar por él, podemos ver como se nos ejecuta con éxito el payload. Hemos pasado de:&lt;/p&gt;
+&lt;p&gt;La cadena de consulta:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;span id=”searchMessage”&amp;gt;hola&amp;lt;/span&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;a esto:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ &amp;lt;span id=”searchMessage”&amp;gt;&amp;lt;/span&amp;gt;&amp;lt;img src=/ onerror=alert(1) /&amp;gt;//&amp;lt;/span&amp;gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM users WHERE username = ‘administrator' or 1=1--’ AND password = ‘password’
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
+&lt;p&gt;Independientemente de si ‘administrator’es un nombre de usuario válido o no, ya 1=1que siempre devolverá verdadero y –comentará el resto de la declaración. Esto significa que podré iniciar sesión con el primer usuario según la tabla de usuarios.&lt;/p&gt;
+
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_innerhtml_sink_using_source_location.search/7.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/3.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio: “DOM XSS in innerHTML sink using source location.search”:</summary></entry><entry><title type="html">Reflected XSS into HTML context with nothing encoded – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-xss-into-html/" rel="alternate" type="text/html" title="Reflected XSS into HTML context with nothing encoded – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/reflected-xss-into-html</id><content type="html" xml:base="http://localhost:4000/reflected-xss-into-html/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into HTML context with nothing encoded.”&lt;/p&gt;
+&lt;p&gt;o si ingresamos:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;administrator’ or 1=1--&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM users WHERE username = ‘administrator'--’ AND password = ‘password’
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;En la consulta anterior, esta vez, dado que ‘AND password = ‘password’está comentado y el nombre de usuario es ‘administrador’, nos iniciará en la cuenta de administrador.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/xss_into_html_context_with_nothing_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/4.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Para resolver el laboratorio tenemos que realizar un Cross-site-Scripting (XSS) que llame a una función alert.&lt;/p&gt;
-
-&lt;p&gt;Cuando entramos en el laboratorio, vemos un campo de búsqueda:&lt;/p&gt;
+&lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/xss_into_html_context_with_nothing_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Vamos a probar a buscar cualquier cosa:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/xss_into_html_context_with_nothing_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Como podemos observar en la siguiente imagen en la &lt;strong&gt;URL&lt;/strong&gt;, hemos buscado &lt;strong&gt;hola&lt;/strong&gt; para ver que nos responde la web.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/xss_into_html_context_with_nothing_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Si nos fijamos, el término de búsqueda se ve reflejado en la web. Por lo que, podemos probar a meter un código Javascript usando el atributo onerror en el tag &lt;img /&gt;.&lt;/p&gt;
-
-&lt;p&gt;De tal forma, que si falla al cargar la imagen que especificamos en el atributo src, se nos ejecutará lo que escribimos en onerror:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/xss_into_html_context_with_nothing_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Laboratorio resuelto&lt;/strong&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/xss_into_html_context_with_nothing_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into HTML context with nothing encoded.</summary></entry><entry><title type="html">Stored XSS into HTML context with nothing encoded – PortSwigger Write Up</title><link href="http://localhost:4000/stored-xss-into-html/" rel="alternate" type="text/html" title="Stored XSS into HTML context with nothing encoded – PortSwigger Write Up" /><published>2022-08-31T00:00:00+02:00</published><updated>2022-08-31T00:00:00+02:00</updated><id>http://localhost:4000/stored-xss-into-html</id><content type="html" xml:base="http://localhost:4000/stored-xss-into-html/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored XSS into HTML context with nothing encoded.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Para resolver el laboratorio tenemos que realizar un Cross-site-Scripting (XSS) que llame a una &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función alert&lt;/code&gt; en un comentario de una publicación.&lt;/p&gt;
-
-&lt;p&gt;Cuando entramos en el laboratorio lo primero que tenemos que hacer es dirigirnos a un post cualquiera.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Dentro del post, encontramos lo siguiente:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Como podemos ver tenemos la opción de dejar un comentario, y distintos campos a rellenar.&lt;/p&gt;
-
-&lt;p&gt;Por lo que nosotros simplemente vamos a hacerle caso, y vamos a rellenar todos los campos, eso si, en el campo del comentario, colocaremos un pequeño código JavaScript que nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Con todos los campos rellenados, simplemente enviamos el comentario y habremos resuelto el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Para ver que ha ocurrido, vamos a volver al post done hemos escrito nuestro comentario:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/5.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/6.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Y como vemos, al entrar en el post, se nos ejecuta el código que habíamos escrito en el campo de comentario. Acabamos de explotar un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Stored XSS&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SQL" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection vulnerability allowing login bypass.</summary></entry><entry><title type="html">SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data – PortSwigger Write Up</title><link href="http://localhost:4000/sql-injection-vulnerability-clause-hidden-data/" rel="alternate" type="text/html" title="SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data – PortSwigger Write Up" /><published>2022-09-03T00:00:00+02:00</published><updated>2022-09-03T00:00:00+02:00</updated><id>http://localhost:4000/sql-injection-vulnerability-clause-hidden-data</id><content type="html" xml:base="http://localhost:4000/sql-injection-vulnerability-clause-hidden-data/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Primero, hagamos clic en una categoría.&lt;/p&gt;
+
+&lt;p&gt;Después de hacer clic en la categoría de regalos corporativos, la URL muestra:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ https://ac321f581f89aa2e808a3eb200d10094.web-security-academy.net/filter?category=Corporate+gifts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Observe las palabras en negrita, que son la cadena de consulta.&lt;/p&gt;
+
+&lt;p&gt;La aplicación realizará una consulta SQL para recuperar información de la base de datos:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts' AND released = 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;El objetivo es recuperar toda la información de los productos, de todas las categorías, y los productos lanzados y no lanzados.&lt;/p&gt;
+
+&lt;p&gt;La declaración anterior &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shows released = 1&lt;/code&gt; significa que solo mostrará productos que se lanzan, donde lanzado = 0 representa no lanzado.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/1.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored XSS into HTML context with nothing encoded.</summary></entry></feed>
+&lt;p&gt;A continuación, si agrego una comilla simple al final de la cadena de consulta:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ ?category=Corporate+gifts'      
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts'' AND released = 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Esto provocará un error, ya que hay una comilla simple que no está cerrada.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;A continuación, agrego un guión doble:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ ?category=Corporate+gifts'--
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;En la cadena de consulta:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts'--' AND released = 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Cualquier cosa después de –será tratada como comentarios en sql.&lt;/p&gt;
+
+&lt;p&gt;Lo que significa que ahora el sitio web debería mostrar todos los productos de la categoría Regalos corporativos, tanto lanzados como inéditos. Tenga en cuenta que hay un elemento adicional llamado Gadgets plegables.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Para mostrar completamente todo en la base de datos:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ ?category=Corporate+gifts' or 1=1--
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;En la cadena de consulta:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts' or 1=1--' AND released = 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ahora, con la consulta anterior, devolverá todos los productos cuando la categoría sea &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Coporate gifts&lt;/code&gt; o &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1=1&lt;/code&gt;, dado que 1=1 siempre es verdadero, devolverá todos los artículos.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y como se puede ver finalmente hemos resuelto el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SQLi" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data.</summary></entry><entry><title type="html">Password reset broken logic – PortSwigger Write Up</title><link href="http://localhost:4000/password-reset-broken-logic/" rel="alternate" type="text/html" title="Password reset broken logic – PortSwigger Write Up" /><published>2022-09-02T00:00:00+02:00</published><updated>2022-09-02T00:00:00+02:00</updated><id>http://localhost:4000/password-reset-broken-logic</id><content type="html" xml:base="http://localhost:4000/password-reset-broken-logic/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Password reset broken logic.”&lt;/p&gt;
+
+&lt;h2 id=&quot;descripción-del-laboratorio&quot;&gt;Descripción del laboratorio&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Analizar
+Como de costumbre, el primer paso es analizar la funcionalidad del laboratorio, en este caso, la funcionalidad de reinicio. Para esto, restablezca la contraseña para &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wiener&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;La solicitud de la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;forgot-password&lt;/code&gt; no parece muy interesante. Contiene algunos encabezados que pueden ser interesantes, pero nada obvio. El cuerpo solo contiene el nombre de usuario.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Da como resultado que se envíe un correo electrónico al correo electrónico de wiener:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Hacer clic en el enlace me permite ingresar una nueva contraseña para &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wiener&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;La solicitud POST correspondiente parece mucho más interesante, ya que contiene el nombre de usuario:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Me pregunto… si solicito una nueva contraseña como wiener, intercepto este POST y cambio el nombre de usuario a carlos:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;La solicitud se procesa con normalidad. Ahora trato de iniciar sesión con las credenciales, solo paso, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;carlos:password&lt;/code&gt; y listo:&lt;/p&gt;
+
+&lt;p&gt;Y como se puede ver finalmente hemos resuelto el laboratorio:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="Login" /><category term="Fuerza bruta" /><category term="Enumeración" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Password reset broken logic.</summary></entry></feed>

@@ -9,6 +9,8 @@ classes: wide
 #  teaser_home_page: true
 categories:
   - Portswigger
+  - XSS
+  - Apprentice
 tags:
   - Burpsuite
   - JavaScript
@@ -65,6 +67,3 @@ Y como vemos, al entrar en el post, se nos ejecuta el código que habíamos escr
 <p align="center">
      <img src="/assets/images/portswigger/stored_xss_into_html_context_with_nothing_encoded/8.png" width="1000">
 </p><br>
-
-
-¡Un saludo y espero que os sirva de apoyo!

@@ -9,6 +9,8 @@ classes: wide
 #  teaser_home_page: true
 categories:
   - Portswigger
+  - XSS
+  - Apprentice
 tags:
   - Burpsuite
   - JavaScript
