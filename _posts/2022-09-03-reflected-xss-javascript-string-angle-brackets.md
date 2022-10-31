@@ -9,12 +9,11 @@ classes: wide
 #  teaser_home_page: true
 categories:
   - Portswigger
-  - XSS
-  - Apprentice
 tags:
   - Burpsuite
   - JavaScript
   - XSS
+  - Apprentice
 ---
 
 En este post vamos a estar resolviendo el laboratorio de PortSwigger: "Reflected XSS into a JavaScript string with angle brackets HTML encoded."

@@ -1,0 +1,634 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>            SQL injection UNION attack, determining the number of columns returned by the query – PortSwigger Write Up - Aitor      Ciberseguridad y Hacking Ético      </title>
+<meta name="description" content="En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection UNION attack, determining the number of columns returned by the query.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Aitor | Ciberseguridad y Hacking Ético">
+<meta property="og:title" content="SQL injection UNION attack, determining the number of columns returned by the query – PortSwigger Write Up">
+<meta property="og:url" content="http://localhost:4000/sql-injection-union-attack-determining-the-number-of-columns-returned-by-the-query/">
+
+
+  <meta property="og:description" content="En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection UNION attack, determining the number of columns returned by the query.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-10-13T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/sql-injection-union-attack-determining-the-number-of-columns-returned-by-the-query/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Aitorgg02",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Aitor | Ciberseguridad y Hacking Ético Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Artículos</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categorías</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Etiquetas</a>
+            </li><li class="masthead__menu-item">
+              <a href="/ctf/" >CTF</a>
+            </li><li class="masthead__menu-item">
+              <a href="/buscador/" >Buscador</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">SQL injection UNION attack, determining the number of columns returned by the query – PortSwigger Write Up</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="Aitorgg02" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Aitorgg02</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        CyberSecurity and Web Developer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/aitor-gonzález-gonzález-44b836189" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/aitorgg02" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="SQL injection UNION attack, determining the number of columns returned by the query – PortSwigger Write Up">
+    <meta itemprop="description" content="En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection UNION attack, determining the number of columns returned by the query.">
+    <meta itemprop="datePublished" content="October 13, 2022">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">SQL injection UNION attack, determining the number of columns returned by the query – PortSwigger Write Up
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2022-10-13T00:00:00+02:00">October 13, 2022 </time>&emsp;
+          
+          
+        </p>
+        <p>En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection UNION attack, determining the number of columns returned by the query.”</p>
+
+<h2 id="pasos">Pasos</h2>
+
+<p>Dirígete a la página de inicio de sesión.</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/1.png" width="1000" />
+</p>
+<p><br /></p>
+
+<h2 id="operador-union">Operador UNION</h2>
+
+<p>Operador UNION utilizado en SQL para combinar los resultados de dos o más instrucciones SELECT en un único conjunto de resultados. Cuando una aplicación contiene una vulnerabilidad de inyección SQL
+ que ocurre en una declaración SELECT y los resultados de la consulta se devuelven dentro de la respuesta de la aplicación, puede usar el operador UNION para realizar otra segunda consulta 
+y combinar su resultado con la primera consulta. De esa manera, puede recuperar datos de otras tablas dentro de la base de datos. Es la forma más rápida de recuperar información arbitraria de 
+la base de datos en situaciones en las que los resultados de la consulta se devuelven directamente.</p>
+
+<p>Consideremos una aplicación web que permite a los usuarios buscar diferentes categorías de productos. La búsqueda de productos en una categoría particular (“Gifts”) hace que la aplicación ejecute la siguiente consulta sql.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT product_name,details FROM products WHERE category = 'Gifts'
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/2.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>La consulta SQL anterior devuelve el siguiente resultado:</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/3.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Un atacante puede proporcionar una entrada manipulada utilizando el operador UNION para inyectar una segunda consulta SELECT y agregar su resultado a la consulta original. 
+Esta segunda consulta se puede utilizar para recuperar datos de usuarios de la tabla de usuarios de la siguiente manera:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' UNION SELECT username,password FROM users--
+</code></pre></div></div>
+
+<p>Hace que la aplicación ejecute la siguiente consulta.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT product_name,details FROM products WHERE category = 'Gifts' UNION SELECT username,password FROM users--
+</code></pre></div></div>
+<p>Esto devuelve el resultado de la consulta original seguido del contenido de la tabla de usuarios.</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/4.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Cuando los resultados de dos o más consultas SELECT se combinan con el operador UNION, los nombres de columna del conjunto de resultados son los mismos que los devueltos por la primera 
+consulta SELECT (original). Como se muestra en la tabla anterior, el nombre de usuario aparece en la columna product_name y la contraseña aparece en la columna de detalles.</p>
+
+<p>Esto implica que cuando la aplicación procesa los resultados de la consulta modificada, no tiene forma de encontrar que los datos devueltos se originaron en la misma tabla o en una tabla diferente en la base de datos.</p>
+
+<p>Para que una consulta UNION funcione, se deben cumplir dos requisitos clave:</p>
+
+<ol>
+  <li>
+    <p>Cuando los resultados de dos consultas se combinan mediante el operador UNION, los dos conjuntos de resultados deben tener la misma estructura. 
+Eso significa que deben contener la misma cantidad de columnas, que tienen tipos de datos iguales o compatibles, que aparecen en el mismo orden.</p>
+  </li>
+  <li>
+    <p>Para inyectar una segunda consulta, el atacante debe tener una idea clara sobre la tabla de la base de datos a la que quiere apuntar y los nombres de las columnas relevantes.</p>
+  </li>
+</ol>
+
+<h2 id="notas">NOTAS</h2>
+
+<ul>
+  <li>
+    <p>Para que la consulta inyectada pueda combinarse con la primera, no es estrictamente necesario que contenga los mismos tipos de datos. Más bien, deben ser compatibles. 
+En otras palabras, cada tipo de datos en la segunda consulta debe ser idéntico al tipo correspondiente en la primera o implícitamente convertible a él. De hecho, el valor NULL se puede convertir a cualquier tipo de datos. 
+Por lo tanto, si no conoce el tipo de datos de un campo en particular, simplemente puede SELECCIONAR NULL para ese campo.</p>
+  </li>
+  <li>
+    <p>En la mayoría de los casos, puede lograr sus objetivos simplemente identificando un solo campo dentro de la consulta original que tiene un tipo de datos de cadena. 
+Esto es suficiente para inyectar consultas arbitrarias que devuelven datos basados ​​en cadenas y recuperar los resultados, lo que le permite extraer los datos deseados de la base de datos.</p>
+  </li>
+</ul>
+
+<h2 id="paso-1">PASO 1</h2>
+
+<p>Su primera tarea es determinar el número de columnas devueltas por la consulta original que ejecuta la aplicación. Puede hacer esto de dos maneras:</p>
+
+<ol>
+  <li>El primer método consiste en inyectar una serie de cláusulas ORDER BY e incrementar el índice de columna especificado hasta que se produzca un error. 
+Por ejemplo, suponiendo que el punto de inyección es una cadena entrecomillada dentro de la cláusula WHERE de la consulta original, enviaría:</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' ORDER BY 1--
+' ORDER BY 2--
+' ORDER BY 3--
+</code></pre></div></div>
+
+<p>Esta serie de cargas útiles modifica la consulta original para ordenar los resultados por diferentes columnas en el conjunto de resultados.
+ Dado que la columna en la cláusula “ordenar por” se puede especificar por su índice, no necesita conocer los nombres de las columnas. 
+Si el índice de la columna especificada excede el número de columnas en la consulta original, la base de datos arroja un error.</p>
+
+<p>En muchos casos del mundo real, la aplicación detecta los mensajes de error de la base de datos que se muestran y no se devuelven en la respuesta HTTP. 
+Sin embargo, si puede detectar algún tipo de diferencia en la respuesta de la aplicación, puede inferir cuántas columnas devuelve la consulta original.</p>
+
+<ol>
+  <li>El segundo método consiste en enviar una serie de cargas útiles de UNION SELECT que especifican un número diferente de valores nulos:</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' UNION SELECT NULL --
+' UNIÓN SELECT NULL,NULL --
+' UNIÓN SELECT NULL,NULL,NULL --
+</code></pre></div></div>
+
+<p>Si el número de nulos no coincide con el número de columnas, la base de datos devuelve un error.</p>
+
+<p>Cuando se ejecuta su consulta, la aplicación puede devolver un mensaje de error, o simplemente puede devolver un error genérico o ningún resultado.
+ Si la aplicación no devuelve un mensaje de error de la base de datos como esperaba, aún puede saber cuándo su consulta inyectada fue exitosa. 
+Cuando el número de nulos coincide con el número de columnas, se devolverá una fila adicional de datos en el conjunto de resultados, 
+que contiene la palabra NULL o una cadena vacía. Tenga en cuenta que la fila inyectada puede contener solo celdas vacías y, por lo tanto, puede ser difícil 
+de ver cuando se representa como HTML. Por esta razón, es preferible observar la respuesta en bruto al realizar este ataque.</p>
+
+<p>En las bases de datos de Oracle, cada declaración SELECT debe incluir un atributo FROM, por lo que inyectar UNION SELECT NULL produce un error independientemente del número de columnas. 
+Puede satisfacer este requisito seleccionando DUAL de la tabla accesible globalmente. Por ejemplo:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' UNION SELECT NULL FROM DUAL--
+</code></pre></div></div>
+
+<h2 id="opción-1">OPCIÓN 1</h2>
+<p>Intercepte la solicitud GET utilizando Burp Suite e inyecte una serie de cláusulas ORDER BY que incrementen el índice de columna especificado hasta que la aplicación muestre un mensaje de error.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' ORDER BY 1 --
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/5.png" width="1000" />
+</p>
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' ORDER BY 2 --
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/6.png" width="1000" />
+</p>
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' ORDER BY 3 --
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/7.png" width="1000" />
+</p>
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' ORDER BY 4 --
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/8.png" width="1000" />
+</p>
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' ORDER BY 4 ----&gt; Returns an error message.
+</code></pre></div></div>
+
+<p>Por lo tanto, el número de columnas devueltas por la consulta original es 3</p>
+
+<h2 id="opción-2">OPCIÓN 2</h2>
+
+<p>Enviando una serie de cargas útiles de UNION SELECT especificando un número diferente de valores nulos hasta que la aplicación proporcione un código de respuesta HTTP 200.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' UNION SELECT NULL --
+</code></pre></div></div>
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/9.png" width="1000" />
+</p>
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>' UNION SELECT NULL, NULL, NULL --
+</code></pre></div></div>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/10.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>En este ejercicio de laboratorio, podemos ver claramente la fila adicional de datos que contiene valores nulos cuando se representa como HTML.</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/11.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>Así que de esta forma concluimos el laboratorio y lo resolvemos.</p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/12.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p align="center">
+     <img src="/assets/images/portswigger/sql_injection_union_attack_determining_the_number_of_columns_returned_by_the_query/13.png" width="1000" />
+</p>
+<p><br /></p>
+
+<p>¡Un saludo y espero que os sirva de apoyo!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#practitioner" class="page__taxonomy-item" rel="tag">Practitioner</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#sql-injection" class="page__taxonomy-item" rel="tag">SQL Injection</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#portswigger" class="page__taxonomy-item" rel="tag">Portswigger</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Fecha:</strong> <time datetime="2022-10-13T00:00:00+02:00">October 13, 2022</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/user-role-can-be-modified-in-user-profile/" class="pagination--pager" title="User role can be modified in user profile – PortSwigger Write Up
+">Previous</a>
+    
+    
+      <a href="/sql-injection-union-attack-finding-column-containing-text/" class="pagination--pager" title="SQL injection UNION attack, finding a column containing text – PortSwigger Write Up
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Aitorgg02</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

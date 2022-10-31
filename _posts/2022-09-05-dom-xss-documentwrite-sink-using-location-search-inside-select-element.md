@@ -9,12 +9,11 @@ classes: wide
 #  teaser_home_page: true
 categories:
   - Portswigger
-  - XSS
-  - Practitioner
 tags:
   - Burpsuite
   - JavaScript
   - XSS
+  - Practitioner
 ---
 
 En este post vamos a estar resolviendo el laboratorio de PortSwigger: "DOM XSS in document.write sink using source location.search inside a select element."

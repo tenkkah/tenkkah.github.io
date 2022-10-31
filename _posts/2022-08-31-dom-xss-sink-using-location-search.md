@@ -9,13 +9,12 @@ classes: wide
 #  teaser: /assets/images/portswigger/xss_into_html_context_with_nothing_encoded/portada.png
 #  teaser_home_page: true
 categories:
-  - Portswigger
-  - XSS
-  - Apprentice
+  - Portswigger 
 tags:
   - Burpsuite
   - JavaScript
   - XSS
+  - Apprentice
 ---
 
 En este post vamos a estar resolviendo el laboratorio: “DOM XSS in innerHTML sink using source location.search”:

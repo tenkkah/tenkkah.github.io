@@ -1,809 +1,716 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-09-05T13:24:02+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aitor | Ciberseguridad y Hacking Ético</title><subtitle>Artículos sobre ciberseguridad, CTF y desarrollo web</subtitle><author><name>Aitorgg02</name></author><entry><title type="html">DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-angular-expression-angle-brackets-and-double-quotes-html/" rel="alternate" type="text/html" title="DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded – PortSwigger Write Up" /><published>2022-09-05T00:00:00+02:00</published><updated>2022-09-05T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-angular-expression-angle-brackets-and-double-quotes-html</id><content type="html" xml:base="http://localhost:4000/dom-xss-angular-expression-angle-brackets-and-double-quotes-html/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, se nos indica que la web usa Angular, y que, además, existe un DOM based XSS en la funcionalidad de búsqueda. Para completar el laboratorio, tenemos que ejecutar la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedidos, probamos la funcionalidad de búsqueda:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En principio no se ve nada raro. Sin embargo, si miramos el código fuente:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Podemos ver como en el body se establece un atributo el cual es &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ng-app&lt;/code&gt;. Ng-app es una directiva que se define un elemento raiz de angular, y, por tanto, define que comienza la aplicación de angular.&lt;/p&gt;
-
-&lt;p&gt;Claro, definiendo en el tag body de HTML que empieza la aplicación de angular, en todo el código que haya dentro, se interpretará cualquier sentencia de angular que se añada. Y gracias a la funcionalidad de búsqueda, podemos controlar un parámetro que se colocará dentro de la parte definida como aplicación de angular.&lt;/p&gt;
-
-&lt;p&gt;Sabiendo esto, usaremos el payload:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/10.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Vamos a explicar el payload:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Los dobles corchetes sirven para que se trate como una expresión de angular.&lt;/li&gt;
-  &lt;li&gt;El &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;constructor.constructor&lt;/code&gt;, básicamente se interpreta igual que una función, es como si declarásemos una función y dentro de esta colocáramos el código que se ejecutará, pues aquí es exactamente lo mismo, dentro de los paréntesis, colocamos lo que queremos que se ejecute, en este caso un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert(1)&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Sabiendo esto, mandamos el payload mencionado, ya que recordemos que este se verá reflejado dentro de la parte que es declarada como angular gracias al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ng-app&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y, por lo tanto, se interpretará como hemos explicado y ejecutará:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &amp;lt;img src=&quot;/assets/images/portswigger/dom_xss_angular_expression_angle_brackets_and_double_quotes_html_encoded/9.png&quot; width=&quot;1&amp;gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded.</summary></entry><entry><title type="html">DOM XSS in document.write sink using source location.search inside a select element – PortSwigger Write Up</title><link href="http://localhost:4000/dom-xss-documentwrite-sink-using-location-search-inside-select-element/" rel="alternate" type="text/html" title="DOM XSS in document.write sink using source location.search inside a select element – PortSwigger Write Up" /><published>2022-09-05T00:00:00+02:00</published><updated>2022-09-05T00:00:00+02:00</updated><id>http://localhost:4000/dom-xss-documentwrite-sink-using-location-search-inside-select-element</id><content type="html" xml:base="http://localhost:4000/dom-xss-documentwrite-sink-using-location-search-inside-select-element/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in document.write sink using source location.search inside a select element.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, para resolver el reto tenemos que escaparnos del elemento “select” y llamar a la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez hemos accedido, podemos ver varios productos. Vamos a entrar en uno cualquiera:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando entramos, podemos observar una función para comprobar el stock en las distintas ciudades:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Si observamos el código fuente de la web, podemos encontrar el siguiente código:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Analizando un poco el script, básicamente se entiende que además de las tres ciudades por defecto para comprobar el stock, se le puede agregar una más a través de la variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;storeId&lt;/code&gt; de la URL. Por lo que podemos probar a añadir esa variable y un valor cualquiera:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedemos a la web de nuevo pero con la variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;storeId&lt;/code&gt;, si nos fijamos en las ciudades:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/9.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Podemos ver como se ha agregado una más, en concreto una con el nombre del valor que le hemos pasado a la variable.&lt;/p&gt;
-
-&lt;p&gt;Si nos vamos de nuevo al código fuente, podemos observar como este parámetro se implementa:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/10.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Por lo que, observando esto, podemos intentar poner un valor que ocasione que nos escapemos del propio elemento &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;options&lt;/code&gt;, y ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/11.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Al acceder a la web con este valor en la variable:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/12.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Se nos ejecuta el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;. En el código fuente, podemos observar lo siguiente:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/13.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y de esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/dom_xss_in_document_write_sink_using_source_location_search_inside_select_element/14.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “DOM XSS in document.write sink using source location.search inside a select element.</summary></entry><entry><title type="html">Reflected XSS into attribute with angle brackets HTML-encoded – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-xss-into-attribute-angle-brackets-html-encoded/" rel="alternate" type="text/html" title="Reflected XSS into attribute with angle brackets HTML-encoded – PortSwigger Write Up" /><published>2022-09-05T00:00:00+02:00</published><updated>2022-09-05T00:00:00+02:00</updated><id>http://localhost:4000/reflected-xss-into-attribute-angle-brackets-html-encoded</id><content type="html" xml:base="http://localhost:4000/reflected-xss-into-attribute-angle-brackets-html-encoded/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into attribute with angle brackets HTML-encoded.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, para resolver el reto tenemos que inyectar un atributo que nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedemos, nos encontramos ante una barra de búsqueda, por lo que vamos a usarla buscando una palabra aleatoria:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando buscamos, si nos fijamos aquí ocurren varias cosas:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;En este caso no hay resultados, pero eso es lo de menos.&lt;/li&gt;
-  &lt;li&gt;En la URL se nos añade el parámetro &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;search&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Lo que buscamos, acaba siendo el valor del atributo &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value&lt;/code&gt; en el elemento &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Teniendo en cuenta los dos últimos puntos, podemos crear un payload que nos cree un nuevo atributo dentro del elemento input para que se nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;. En este caso el payload es:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;“onmousemove=”alert(1)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;De esta forma, buscando por el payload que hemos especificado arriba, conseguimos resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Parece que no ha ocurrido nada a nivel de ejecutar el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;, sin embargo, si pasamos el ratón por encima de la palabra:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Se nos ejecuta. De esta forma conseguimos resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_into_attribute_with_angle_brackets_html_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into attribute with angle brackets HTML-encoded.</summary></entry><entry><title type="html">Stored XSS into anchor href attribute with double quotes HTML-encoded – PortSwigger Write Up</title><link href="http://localhost:4000/stored-xss-into-anchor-attribute-double-quotes-html-encoded/" rel="alternate" type="text/html" title="Stored XSS into anchor href attribute with double quotes HTML-encoded – PortSwigger Write Up" /><published>2022-09-04T00:00:00+02:00</published><updated>2022-09-04T00:00:00+02:00</updated><id>http://localhost:4000/stored-xss-into-anchor-attribute-double-quotes-html-encoded</id><content type="html" xml:base="http://localhost:4000/stored-xss-into-anchor-attribute-double-quotes-html-encoded/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored XSS into anchor href attribute with double quotes HTML-encoded.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, para resolver el laboratorio tenemos que escribir un comentario que llame a la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función alert&lt;/code&gt; cuando se haga click en el nombre del autor del comentario.&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedemos, podemos ver como hay distintos artículos, nos metemos en el primero de ellos (podríamos meternos en cualquiera):&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez dentro, podemos observar que hay una zona de comentarios:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Por lo que vamos a escribir un comentario cualquiera:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando enviamos un comentario, este se escribe y almacena en la web. Podemos observar como en el comentario que hemos puesto hay un hipervínculo. Si vemos su código fuente, podemos observar como el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;atributo href&lt;/code&gt; corresponde al campo de “Website” de cuando se escribe un comentario:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/9.png&quot; width=&amp;gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Por lo que sabiendo esto, podemos escribir en el campo de “Website” un payload que nos ejecute un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt; cuando se de click en el nombre del autor:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/10.png&quot; width=&amp;gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Enviamos el comentario y…&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/11.png&quot; width=&amp;gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Completamos el laboratorio! Si volvemos a la zona de comentarios y observamos el código fuente, podemos ver como se ha colocado nuestro payload:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/12.png&quot; width=&amp;gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y si damos click en “test”:&lt;/p&gt;
-
-&lt;p&gt;¡Se nos ejecuta!&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &amp;lt;img src=&quot;/assets/images/portswigger/stored_xss_into_anchor_attribute_double_quotes_html_encoded/13.png&quot; width=&amp;gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored XSS into anchor href attribute with double quotes HTML-encoded.</summary></entry><entry><title type="html">Reflected DOM XSS – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-dom-xss/" rel="alternate" type="text/html" title="Reflected DOM XSS – PortSwigger Write Up" /><published>2022-09-04T00:00:00+02:00</published><updated>2022-09-04T00:00:00+02:00</updated><id>http://localhost:4000/reflected-dom-xss</id><content type="html" xml:base="http://localhost:4000/reflected-dom-xss/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected DOM XSS.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso se nos indica que el servidor procesa los datos de una petición y lo muestra los datos de la respuesta. Posteriormente, un script de la página procesa los datos reflejados de una forma insegura. Para resolver el laboratorio debemos de ejecutar la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;función alert&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Dicho esto, lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedidos, podemos observar un formulario que nos permite buscar en el blog. Para analizar mejor el comportamiento de esta funcionalidad, abrimos el burp suite y activamos el proxy en el navegador:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Con esto hecho, probamos a hacer cualquier búsqueda:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando damos a “Buscar”, se genera la petición que podemos observar arriba. No hay mucha información, además de que en el enunciado nos hacen el spoiler de que la vulnerabilidad está en un script inseguro, por lo que podemos suponer que la primera petición de búsqueda no tiene mucha historia, por lo que simplemente la enviamos.&lt;/p&gt;
-
-&lt;p&gt;Cuando enviamos la primera petición de búsqueda, si mantenemos el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;intercept&lt;/code&gt; del burp suite puesto, interceptaremos la siguiente petición:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Esta tiene pinta que ha sido generada por el frontend del recurso que se solicitó en la primera petición &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(/?search=test)&lt;/code&gt;. Para analizar mejor su respuesta, la pasamos al repeater:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;El servidor nos devuelve una respuesta en formato JSON, donde en la parte inferior podemos observar el término de búsqueda que hemos colocado.&lt;/p&gt;
-
-&lt;p&gt;Podemos probar a intentar escaparnos del contexto del JSON en este caso, por ejemplo, a intentar meter un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/9.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En la respuesta podemos observar como en principio parece que sin problemas podemos inyectar y escaparnos del JSON, ya que no hay ningun tipo de sanitización, por lo que, usando el payload de arriba, lo colocamos en la petición que dejamos en el proxy, y lo enviamos:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/10.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/11.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;De esta manera, conseguimos obtener un XSS y resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/12.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected-dom-xss/13.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected DOM XSS.</summary></entry><entry><title type="html">Stored DOM XSS – PortSwigger Write Up</title><link href="http://localhost:4000/stored-dom-xss/" rel="alternate" type="text/html" title="Stored DOM XSS – PortSwigger Write Up" /><published>2022-09-04T00:00:00+02:00</published><updated>2022-09-04T00:00:00+02:00</updated><id>http://localhost:4000/stored-dom-xss</id><content type="html" xml:base="http://localhost:4000/stored-dom-xss/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored DOM XSS.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, el enunciado nos dice que existe una vulnerabilidad de XSS del tipo DOM almacenado en la funcionalidad de comentario del blog. Para resolver el laboratorio debemos de explotar la vulnerabilidad y ejecutar la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Dicho esto, lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedidos, podemos observar como hay distintos artículos, en este caso, vamos a ver el primero:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Al acceder a un artículo, podemos observar como hay una zona de comentarios:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, simplemente vamos a llenarla con datos random y a publicar un comentario:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez publicado, volvemos al artículo para ver nuestro comentario:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Sin problemas se ha publicado.&lt;/p&gt;
-
-&lt;p&gt;Si investigamos un poco el código fuente y las distintas dependencias (archivos JS), podemos encontrar el siguiente archivo de JavaScript, llamado &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;loadComments.js&lt;/code&gt;:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/9.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;El archivo, entre otras cosas, posee una función que reemplaza los simbolos &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; y &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;&lt;/code&gt;, HTML encodeandolos cuando se carga los comentarios.&lt;/p&gt;
-
-&lt;p&gt;Aquí es donde está el fallo, está usando el método &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replace&lt;/code&gt; para la sustitución. Este método únicamente reemplaza la primera ocurrencia que encuentra, por ejemplo, si tengo la palabra patata y utilizo la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replace&lt;/code&gt; para sustituir las &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;‘a’&lt;/code&gt; por una &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;‘e’&lt;/code&gt;, el resultado de implementar este método en la palabra patata dará como resultado: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;petata&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Por lo que, teniendo en cuenta este funcionamiento, podemos crear un payload típico de XSS, pero colocando al principio de este &amp;lt;&amp;gt; para que sean los que el script sustituya y no los símbolos usados en el código malicioso:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/10.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/11.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;De esta manera, al publicar el comentario y volver al post:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/12.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Conseguimos ejecutar el código javascript que habiamos puesto, en este caso, el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/13.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/stored-dom-xss/14.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;
-¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Stored DOM XSS.</summary></entry><entry><title type="html">Reflected XSS into a JavaScript string with angle brackets HTML encoded – PortSwigger Write Up</title><link href="http://localhost:4000/reflected-xss-javascript-string-angle-brackets/" rel="alternate" type="text/html" title="Reflected XSS into a JavaScript string with angle brackets HTML encoded – PortSwigger Write Up" /><published>2022-09-03T00:00:00+02:00</published><updated>2022-09-03T00:00:00+02:00</updated><id>http://localhost:4000/reflected-xss-javascript-string-angle-brackets</id><content type="html" xml:base="http://localhost:4000/reflected-xss-javascript-string-angle-brackets/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into a JavaScript string with angle brackets HTML encoded.”&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/1.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;En este caso, para resolver el reto tenemos que inyectar un payload que escape del string donde se encuentra y llame a la función alert.&lt;/p&gt;
-
-&lt;p&gt;Lo primero de todo es acceder al laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/2.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Una vez accedemos, nos encontramos ante una barra de búsqueda, por lo que vamos a usarla buscando una palabra aleatoria:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/3.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Cuando hacemos la búsqueda, podemos observar como la palabra que hemos buscado, se encuentra, entre otros sitios en la siguiente parte del código fuente.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/4.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Como podemos observar, es un string. Puedes pensar, ok, cierro la variable, pongo un alert y listo, una cosa así:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;var searchTerms= ‘ alert(‘XSS’) ‘&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Pero esto no es válido, ya que JavaScript no permite espacios en una variable, por esa misma razón para que toda la cadena se tome como parte de la variable, y aun así, el alert se ejecute, se concatena usando un guion. En el siguiente &amp;gt;&lt;/p&gt;
-
-&lt;p&gt;Dicho esto, colocamos un payload como:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;’ ‘-alert(‘XSS’)-‘ ‘&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Y cuando le demos a buscar:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Se habrá ejecutado el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;alert&lt;/code&gt;. En el código fuente, se verá de la siguiente forma:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Con esto, completamos el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/reflected_xss_javascript_string_angle_brackets/8.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="JavaScript" /><category term="XSS" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Reflected XSS into a JavaScript string with angle brackets HTML encoded.</summary></entry><entry><title type="html">SQL injection vulnerability allowing login bypass – PortSwigger Write Up</title><link href="http://localhost:4000/sql-injection-vulnerability-allowing-login-bypass/" rel="alternate" type="text/html" title="SQL injection vulnerability allowing login bypass – PortSwigger Write Up" /><published>2022-09-03T00:00:00+02:00</published><updated>2022-09-03T00:00:00+02:00</updated><id>http://localhost:4000/sql-injection-vulnerability-allowing-login-bypass</id><content type="html" xml:base="http://localhost:4000/sql-injection-vulnerability-allowing-login-bypass/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection vulnerability allowing login bypass.”&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-31T02:07:21+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aitor | Ciberseguridad y Hacking Ético</title><subtitle>Artículos sobre ciberseguridad, CTF y desarrollo web</subtitle><author><name>Aitorgg02</name></author><entry><title type="html">Blind SSRF with out-of-band detection – PortSwigger Write Up</title><link href="http://localhost:4000/blind-ssrf-with-out-of-band-detection/" rel="alternate" type="text/html" title="Blind SSRF with out-of-band detection – PortSwigger Write Up" /><published>2022-10-30T00:00:00+02:00</published><updated>2022-10-30T00:00:00+02:00</updated><id>http://localhost:4000/blind-ssrf-with-out-of-band-detection</id><content type="html" xml:base="http://localhost:4000/blind-ssrf-with-out-of-band-detection/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Blind SSRF with out-of-band detection.”&lt;/p&gt;
 
 &lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
 
-&lt;p&gt;Dirígete a la página de inicio de sesión.&lt;/p&gt;
-
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/1.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/blind_ssrf_with_out_of_band_redirection/1.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Cuando ingresamos un nombre de usuario y contraseña, la cadena de consulta se verá así:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM users WHERE username = ‘administrator’ AND password = ‘password’
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Ingresé una comilla simple en el nombre de usuario e inicio de sesión (lo mismo con la contraseña). Ambos dan como resultado un error interno del servidor, lo que muestra que podría ser vulnerable a la inyección de SQL.&lt;/p&gt;
+&lt;p&gt;Vamos a ver la web y vamos a ir a ver los detalles de un producto.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/2.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/blind_ssrf_with_out_of_band_redirection/2.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;En este caso si ingreso: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;administrator’&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1=1--&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;La cadena de consulta:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM users WHERE username = ‘administrator' or 1=1--’ AND password = ‘password’
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Independientemente de si ‘administrator’es un nombre de usuario válido o no, ya 1=1que siempre devolverá verdadero y –comentará el resto de la declaración. Esto significa que podré iniciar sesión con el primer usuario según la tabla de usuarios.&lt;/p&gt;
+&lt;p&gt;Una vez dentro vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interceptar&lt;/code&gt; la petición con el burpsuite de la función &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;view details&lt;/code&gt;. En este caso podemos ver una petición con bastantes cabeceras, pero vamos a fijarnos en una en específico que es la de &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Referer&lt;/code&gt;, lo que implica que ésta es la que se
+refiere cuando quiere referirse a una URL, es a donde se dirige.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/3.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/blind_ssrf_with_out_of_band_redirection/3.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;o si ingresamos:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;administrator’ or 1=1--&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM users WHERE username = ‘administrator'--’ AND password = ‘password’
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;En la consulta anterior, esta vez, dado que ‘AND password = ‘password’está comentado y el nombre de usuario es ‘administrador’, nos iniciará en la cuenta de administrador.&lt;/p&gt;
+&lt;p&gt;En este caso vamos a usar el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BurpCollaborator Client&lt;/code&gt; para que nos genere una URL a ver si cuando la copiamos y le damos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;poll now&lt;/code&gt; nos llega una petición HTTP.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/4.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/blind_ssrf_with_out_of_band_redirection/4.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;De esta forma, conseguimos resolver el laboratorio:&lt;/p&gt;
+&lt;p&gt;Sí que nos envía una petición HTTP como es el caso y nos redirige a la URL que le habíamos especificado que era la ruta &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/test&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/5.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/blind_ssrf_with_out_of_band_redirection/5.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
+&lt;p&gt;Laboratorio realizado.&lt;/p&gt;
+
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_allowing_login_bypass/6.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/blind_ssrf_with_out_of_band_redirection/6.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SQL" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL injection vulnerability allowing login bypass.</summary></entry><entry><title type="html">SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data – PortSwigger Write Up</title><link href="http://localhost:4000/sql-injection-vulnerability-clause-hidden-data/" rel="alternate" type="text/html" title="SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data – PortSwigger Write Up" /><published>2022-09-03T00:00:00+02:00</published><updated>2022-09-03T00:00:00+02:00</updated><id>http://localhost:4000/sql-injection-vulnerability-clause-hidden-data</id><content type="html" xml:base="http://localhost:4000/sql-injection-vulnerability-clause-hidden-data/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data.”&lt;/p&gt;
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SSRF" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Blind SSRF with out-of-band detection.</summary></entry><entry><title type="html">SSRF with blacklist-based input filter – PortSwigger Write Up</title><link href="http://localhost:4000/ssrf-with-blacklist-based-input-filter/" rel="alternate" type="text/html" title="SSRF with blacklist-based input filter – PortSwigger Write Up" /><published>2022-10-30T00:00:00+02:00</published><updated>2022-10-30T00:00:00+02:00</updated><id>http://localhost:4000/ssrf-with-blacklist-based-input-filter</id><content type="html" xml:base="http://localhost:4000/ssrf-with-blacklist-based-input-filter/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SSRF with blacklist-based input filter.”&lt;/p&gt;
 
 &lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
 
-&lt;p&gt;Primero, hagamos clic en una categoría.&lt;/p&gt;
+&lt;p&gt;Este laboratorio tiene una función de verificación de existencias que obtiene datos de un sistema interno.&lt;/p&gt;
 
-&lt;p&gt;Después de hacer clic en la categoría de regalos corporativos, la URL muestra:&lt;/p&gt;
+&lt;p&gt;Para resolver el laboratorio, cambie la URL de verificación de existencias para acceder a la interfaz de administración http://localhost/adminy elimine el usuario carlos.&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ https://ac321f581f89aa2e808a3eb200d10094.web-security-academy.net/filter?category=Corporate+gifts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Observe las palabras en negrita, que son la cadena de consulta.&lt;/p&gt;
-
-&lt;p&gt;La aplicación realizará una consulta SQL para recuperar información de la base de datos:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts' AND released = 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;El objetivo es recuperar toda la información de los productos, de todas las categorías, y los productos lanzados y no lanzados.&lt;/p&gt;
-
-&lt;p&gt;La declaración anterior &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shows released = 1&lt;/code&gt; significa que solo mostrará productos que se lanzan, donde lanzado = 0 representa no lanzado.&lt;/p&gt;
+&lt;p&gt;El desarrollador ha desplegado dos débiles defensas anti-SSRF que deberá eludir.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/1.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/1.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;A continuación, si agrego una comilla simple al final de la cadena de consulta:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ ?category=Corporate+gifts'      
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts'' AND released = 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Esto provocará un error, ya que hay una comilla simple que no está cerrada.&lt;/p&gt;
+&lt;p&gt;Vamos a ver la web y vamos a ir a ver los detalles de un producto.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/2.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/2.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;A continuación, agrego un guión doble:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ ?category=Corporate+gifts'--
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;En la cadena de consulta:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts'--' AND released = 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Cualquier cosa después de –será tratada como comentarios en sql.&lt;/p&gt;
-
-&lt;p&gt;Lo que significa que ahora el sitio web debería mostrar todos los productos de la categoría Regalos corporativos, tanto lanzados como inéditos. Tenga en cuenta que hay un elemento adicional llamado Gadgets plegables.&lt;/p&gt;
+&lt;p&gt;Una vez dentro vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interceptar&lt;/code&gt; la petición con el burpsuite.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/3.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/3.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Para mostrar completamente todo en la base de datos:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ ?category=Corporate+gifts' or 1=1--
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;En la cadena de consulta:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ SELECT * FROM products WHERE category = 'Corporate gifts' or 1=1--' AND released = 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Ahora, con la consulta anterior, devolverá todos los productos cuando la categoría sea &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Coporate gifts&lt;/code&gt; o &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1=1&lt;/code&gt;, dado que 1=1 siempre es verdadero, devolverá todos los artículos.&lt;/p&gt;
+&lt;p&gt;Una vez recibida la petición vamos a enviarla al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Repeater&lt;/code&gt; y a darle a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;send&lt;/code&gt; a ver que nos devuelve&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/4.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/4.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Y como se puede ver finalmente hemos resuelto el laboratorio:&lt;/p&gt;
-
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/sql_injection_vulnerability_where_clause_hidden_data/5.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/5.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SQLi" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SQL Injection vulnerability in WHERE clause allowing retrieval of hidden data.</summary></entry><entry><title type="html">Password reset broken logic – PortSwigger Write Up</title><link href="http://localhost:4000/password-reset-broken-logic/" rel="alternate" type="text/html" title="Password reset broken logic – PortSwigger Write Up" /><published>2022-09-02T00:00:00+02:00</published><updated>2022-09-02T00:00:00+02:00</updated><id>http://localhost:4000/password-reset-broken-logic</id><content type="html" xml:base="http://localhost:4000/password-reset-broken-logic/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Password reset broken logic.”&lt;/p&gt;
-
-&lt;h2 id=&quot;descripción-del-laboratorio&quot;&gt;Descripción del laboratorio&lt;/h2&gt;
+&lt;p&gt;En este caso vamos a recodear la url con Ctrl U y a ver si nos devuelve algo, dandole a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;send&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/1.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/6.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Nos falta hacer lo mismo en el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; hay que recodearlo con Ctrl U.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;No ha sido exitoso recodeandolo asi que en este caso vamos a usar &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt; a ver si podemos acceder.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;El anterior caso no ha sido exitoso, como sabemos &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt; se puede representar de esta otra manera &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.0.0.1&lt;/code&gt;, vamos a probar de esa manera:&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Como por detrás quizás esté validando en el servidor que la palabra &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin&lt;/code&gt; no le deje entrar, vamos a codear la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt; de admin para que poder bypassear la sanetización. Y aparte vamos a usar el 127.1 ya que en este caso si los siguientes números son 0, se puede
+simplificar la dirección IP de esta manera: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.1&lt;/code&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/13.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Y efectivamente de esta manera nos ha dejado acceder al panel de admin, en este caso hay que eliminar al usuario Carlos, así que vamos a eliminarlo y de esta forma completamos el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/14.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/15.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Laboratorio realizado.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_blacklist_based_input_filter/16.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SSRF" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SSRF with blacklist-based input filter.</summary></entry><entry><title type="html">SSRF with filter bypass via open redirection vulnerability – PortSwigger Write Up</title><link href="http://localhost:4000/ssrf-with-filter-bypass-via-open-redirection-vulnerability/" rel="alternate" type="text/html" title="SSRF with filter bypass via open redirection vulnerability – PortSwigger Write Up" /><published>2022-10-30T00:00:00+02:00</published><updated>2022-10-30T00:00:00+02:00</updated><id>http://localhost:4000/ssrf-with-filter-bypass-via-open-redirection-vulnerability</id><content type="html" xml:base="http://localhost:4000/ssrf-with-filter-bypass-via-open-redirection-vulnerability/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SSRF with filter bypass via open redirection vulnerability.”&lt;/p&gt;
 
 &lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;Analizar
-Como de costumbre, el primer paso es analizar la funcionalidad del laboratorio, en este caso, la funcionalidad de reinicio. Para esto, restablezca la contraseña para &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wiener&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/2.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/1.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;La solicitud de la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;forgot-password&lt;/code&gt; no parece muy interesante. Contiene algunos encabezados que pueden ser interesantes, pero nada obvio. El cuerpo solo contiene el nombre de usuario.&lt;/p&gt;
+&lt;p&gt;Vamos a ver la web y vamos a ir a ver los detalles de un producto.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/3.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/2.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Da como resultado que se envíe un correo electrónico al correo electrónico de wiener:&lt;/p&gt;
+&lt;p&gt;Una vez dentro vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interceptar&lt;/code&gt; la petición con el burpsuite.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/4.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/3.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;Hacer clic en el enlace me permite ingresar una nueva contraseña para &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wiener&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;En la URL de la petición vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;decodearla&lt;/code&gt;, a con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl U&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/5.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;La solicitud POST correspondiente parece mucho más interesante, ya que contiene el nombre de usuario:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/6.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Me pregunto… si solicito una nueva contraseña como wiener, intercepto este POST y cambio el nombre de usuario a carlos:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/7.png&quot; width=&quot;1000&quot; /&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;La solicitud se procesa con normalidad. Ahora trato de iniciar sesión con las credenciales, solo paso, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;carlos:password&lt;/code&gt; y listo:&lt;/p&gt;
-
-&lt;p&gt;Y como se puede ver finalmente hemos resuelto el laboratorio:&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/8.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/4.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;
-     &lt;img src=&quot;/assets/images/portswigger/password_reset_broken_logic/9.png&quot; width=&quot;1000&quot; /&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/5.png&quot; width=&quot;1000&quot; /&gt;
 &lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Burpsuite" /><category term="Login" /><category term="Fuerza bruta" /><category term="Enumeración" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Password reset broken logic.</summary></entry></feed>
+&lt;p&gt;En este caso vamos a volver a la web, donde podemos ver que hay un botón para ver el siguiente producto, con el burpsuite activado vamos interceptar la petición.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a copiar la URL de la petición para ver en la URL de la web también se puede hacer&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Si podemos ver en la URL en el path si nos hace un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect&lt;/code&gt; es que es vulnerable, en este caso le ponemos la ruta de google y si nos redirecciona.
+Ya tenemos una potencial vulnerabilidad, vamos a volver al burpsuite para completar el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Volvemos a capturar la petición del &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;next product&lt;/code&gt; y vamos a usar una IP de la red interna como nos dice en la descripción del laboratorio y escribirla después del path para que nos haga un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect&lt;/code&gt;. Bingo, hemos accedido al panel, ya solo nos falta eliminar 
+el usuario &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Carlos&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Laboratorio realizado.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_filter_bypass_via_open_redirection_vulnerability/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SSRF" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SSRF with filter bypass via open redirection vulnerability.</summary></entry><entry><title type="html">SSRF with whitelist-based input filter – PortSwigger Write Up</title><link href="http://localhost:4000/ssrf-with-whitelist-based-input-filter/" rel="alternate" type="text/html" title="SSRF with whitelist-based input filter – PortSwigger Write Up" /><published>2022-10-30T00:00:00+02:00</published><updated>2022-10-30T00:00:00+02:00</updated><id>http://localhost:4000/ssrf-with-whitelist-based-input-filter</id><content type="html" xml:base="http://localhost:4000/ssrf-with-whitelist-based-input-filter/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SSRF with whitelist-based input filter.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ver los detalles&lt;/code&gt; de los productos e interceptar la petición con el burpsuite.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con la petición vamos a coger la URL y decodearla con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl U&lt;/code&gt;. Una vez decodeado hay que codear también el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a enviar la petición al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Repeater&lt;/code&gt; con Ctrl R y ver si poniendo &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost/admin&lt;/code&gt; nos devuelve un panel de admin. En este caso cuando enviamos la petición nos dice que &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stock.weliketoshop.com&lt;/code&gt; tiene que estar también en la URL.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a poner en la url la dirección que nos pide obligatoriamente y con el nombre &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;, en este caso no nos da ningún error así que hay que ver sobre esta URL como podemos implementar el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finalmente vamos a ver si introduciendo &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt; y seguidamente el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#&lt;/code&gt; para acceder al propio localhost y accediendo a una sección de la página que en este caso sería &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stock.weliketoshop.com&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a recodear el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#&lt;/code&gt; por si en este caso está saneando por el lado del servidor. Cómo podemos ver nos da una respuesta &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;200 OK&lt;/code&gt;, hemos podido acceder al panel de admin, ahora vamos a eliminar al usuario Carlos y ya estaría completado el laboratorio&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Laboratorio realizado.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/ssrf_with_whitelist_based_input_filter/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SSRF" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “SSRF with whitelist-based input filter.</summary></entry><entry><title type="html">Basic SSRF against the local server – PortSwigger Write Up</title><link href="http://localhost:4000/basic-ssrf-against-another-backend-system/" rel="alternate" type="text/html" title="Basic SSRF against the local server – PortSwigger Write Up" /><published>2022-10-21T00:00:00+02:00</published><updated>2022-10-21T00:00:00+02:00</updated><id>http://localhost:4000/basic-ssrf-against-another-backend-system</id><content type="html" xml:base="http://localhost:4000/basic-ssrf-against-another-backend-system/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Basic SSRF against the local server.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;En este ejemplo, hay un dispositivo en la red interna que permite el acceso no autenticado a la interfaz de administración. Dado que no podemos acceder a este dispositivo externamente, 
+necesitaremos aprovechar la vulnerabilidad SSRF en el servidor web externo para comunicarnos con él. Para empezar, sabemos que la red interna utiliza el siguiente esquema de red interna: 192.168.0.0/24.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a ver la web y vamos a ir a ver los detalles de un producto.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez dentro vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interceptar&lt;/code&gt; la petición con el burpsuite.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Interceptemos la solicitud HTTP y enviémosla al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Repeater&lt;/code&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a pulsar Ctrl Shift U para recodearlo.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cómo sabemos la URL a la que tenemos que acceder vamos a poner directamente la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;URL&lt;/code&gt;, como no sabemos la dirección ip de la red interna vamos a hacer un ataque de &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fuzzing&lt;/code&gt; a la IP.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso vamos a irnos al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Intruder&lt;/code&gt; con Ctrl I y vamos a coger el último dígito de la dirección IP ya que como hemos visto en la descripción del laboratorio el rango de la IP sabemos que es desde el 192.168.0.X hasta el 192.168.0.254, en este caso vamos a hacer
+un ataque de fuerza bruta. Vamos a añadirle un payload al ñultimo dñigito de la IP para fuzzearla.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Como vemos en la sección del payload vamos a seleccionar un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;único payload de tipo number&lt;/code&gt; y que sea secuencia de 1 en 1 desde el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rango 1 hasta el 254&lt;/code&gt; y comenzamos el ataque.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finalmente damos con el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;206&lt;/code&gt; que nos da un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;200&lt;/code&gt; por parte del servidor así que es funcional.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finalmente vamos a copiar la IP entera valida que en este caso es la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;192.168.0.206&lt;/code&gt;, nos vamos al Repeater y enviamos la petición y como vemos si renderizamos la petición nos aparece el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;panel de admin&lt;/code&gt; el cual no teniamos acceso desde la máquina.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos al código y vemos que hay una &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruta para eliminar al usuario Carlos&lt;/code&gt; así que la copiamos y enviamos la petición y de esta forma finalmente completamos el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_another_backend_system/13.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SSRF" /><category term="Apprentice" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Basic SSRF against the local server.</summary></entry><entry><title type="html">Basic SSRF against the local server – PortSwigger Write Up</title><link href="http://localhost:4000/basic-ssrf-against-the-local-server/" rel="alternate" type="text/html" title="Basic SSRF against the local server – PortSwigger Write Up" /><published>2022-10-21T00:00:00+02:00</published><updated>2022-10-21T00:00:00+02:00</updated><id>http://localhost:4000/basic-ssrf-against-the-local-server</id><content type="html" xml:base="http://localhost:4000/basic-ssrf-against-the-local-server/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Basic SSRF against the local server.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Este laboratorio tiene una función de verificación de existencias que obtiene datos de un sistema interno.&lt;/p&gt;
+
+&lt;p&gt;Para resolver el laboratorio, cambie la URL de verificación de existencias para acceder a la interfaz de administración http://localhost/adminy elimine el usuario carlos.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a ver la web y vamos a ir a ver los detalles de un producto.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez dentro vamos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interceptar&lt;/code&gt; la petición con el burpsuite.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Interceptemos la solicitud HTTP y enviémosla al repetidor.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a pulsar Ctrl Shift U para recodearlo.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ahora como nos dice en la descripción del laboratorio que probemos entrar al &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://localhost/admin&lt;/code&gt; de la máquina vamos a ver si nos da acceso cuando le demos a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;send&lt;/code&gt;.
+La respuesta en este caso podemos darle a la vista de &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;render&lt;/code&gt; para visualizar el contenido como se vería la respuesta y nos sale el panel de admin el cual antes no nos aparecía.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Una vez accedidos al panel de admin, vamos a copiar la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ruta de el usuario Carlos&lt;/code&gt; para eliminarlo y así completar el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Laboratorio realizado&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/11.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/basic_ssrf_against_the_local_server/12.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="SSRF" /><category term="Apprentice" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “Basic SSRF against the local server.</summary></entry><entry><title type="html">File path traversal, sequences blocked with absolute path bypass – PortSwigger Write Up</title><link href="http://localhost:4000/file-path-traversal-sequences-blocked-with-absolute-path-bypass/" rel="alternate" type="text/html" title="File path traversal, sequences blocked with absolute path bypass – PortSwigger Write Up" /><published>2022-10-18T00:00:00+02:00</published><updated>2022-10-18T00:00:00+02:00</updated><id>http://localhost:4000/file-path-traversal-sequences-blocked-with-absolute-path-bypass</id><content type="html" xml:base="http://localhost:4000/file-path-traversal-sequences-blocked-with-absolute-path-bypass/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, sequences blocked with absolute path bypass.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Cómo nos dice en la descripción del producto tenemos que acceder al directorio /etc/passwd mediante la ruta de las imágenes&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_blocked_with_absolute_path_bypass/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En la web que nos aparece es una tienda donde podemos ver los productos, así que vamos a ver un producto.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_blocked_with_absolute_path_bypass/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a darle a abrir &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;imagen en una pestaña nueva&lt;/code&gt; para poder ver la ruta de la imagen y a partir de dicha ruta poder acceder a la ruta vulnerable.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_blocked_with_absolute_path_bypass/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a interceptar la petición con el burpsuite y la vamos a llevar al Repeater con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl+R&lt;/code&gt;, vamos a ver si retrocediendo los directorios con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;../&lt;/code&gt; múltiples veces llegamos a ver el directorio. Y en la respuesta nos da la solución hemos podido acceder
+a dicha ruta.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_blocked_with_absolute_path_bypass/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso si tiramos de una ruta absoluta nos coge el fichero sin tener que retroceder con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;../&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_blocked_with_absolute_path_bypass/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con esto concluimos el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_blocked_with_absolute_path_bypass/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Directory traversal" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, sequences blocked with absolute path bypass.</summary></entry><entry><title type="html">File path traversal, traversal sequences stripped non-recursively – PortSwigger Write Up</title><link href="http://localhost:4000/file-path-traversal-sequences-stripped-non-recursively/" rel="alternate" type="text/html" title="File path traversal, traversal sequences stripped non-recursively – PortSwigger Write Up" /><published>2022-10-18T00:00:00+02:00</published><updated>2022-10-18T00:00:00+02:00</updated><id>http://localhost:4000/file-path-traversal-sequences-stripped-non-recursively</id><content type="html" xml:base="http://localhost:4000/file-path-traversal-sequences-stripped-non-recursively/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, traversal sequences stripped non-recursively.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Cómo nos dice en la descripción del producto tenemos que acceder al directorio /etc/passwd mediante la ruta de las imágenes&lt;/p&gt;
+
+&lt;p&gt;Otro consejo que nos da es que en este caso la aplicaciñon sanea por parte del servidor todo contenido que tenga que ver con directorios.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_non_recuersively/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En la web que nos aparece es una tienda donde podemos ver los productos, así que vamos a ver un producto.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_non_recuersively/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a darle a abrir &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;imagen en una pestaña nueva&lt;/code&gt; para poder ver la ruta de la imagen y a partir de dicha ruta poder acceder a la ruta vulnerable.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_non_recuersively/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a interceptar la petición con el burpsuite y la vamos a llevar al Repeater con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl+R&lt;/code&gt;, vamos a ver si retrocediendo los directorios con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;....//&lt;/code&gt; múltiples veces llegamos a ver el directorio. Y en la respuesta nos da la solución hemos podido acceder
+a dicha ruta.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;En este caso como por parte del servidor sanea los datos introducidos si sanea ../, si ponemos el doble realmente sanea los datos de entrada 1 vez, así que de esa forma &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;no es recursivo&lt;/code&gt; el saneamiento que aplica y conseguimos acceder al directorio.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_non_recuersively/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_non_recuersively/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con esto concluimos el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_non_recuersively/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Directory traversal" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, traversal sequences stripped non-recursively.</summary></entry><entry><title type="html">File path traversal, traversal sequences stripped with superfluous URL-decode – PortSwigger Write Up</title><link href="http://localhost:4000/file-path-traversal-sequences-stripped-with-superfluous-url/" rel="alternate" type="text/html" title="File path traversal, traversal sequences stripped with superfluous URL-decode – PortSwigger Write Up" /><published>2022-10-18T00:00:00+02:00</published><updated>2022-10-18T00:00:00+02:00</updated><id>http://localhost:4000/file-path-traversal-sequences-stripped-with-superfluous-url</id><content type="html" xml:base="http://localhost:4000/file-path-traversal-sequences-stripped-with-superfluous-url/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, traversal sequences stripped with superfluous URL-decode.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Cómo nos dice en la descripción del producto tenemos que acceder al directorio /etc/passwd mediante la ruta de las imágenes&lt;/p&gt;
+
+&lt;p&gt;Otro consejo que nos da es que en este caso la aplicaciñon sanea por parte del servidor todo contenido que tenga que ver con directorios.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En la web que nos aparece es una tienda donde podemos ver los productos, así que vamos a ver un producto.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a darle a abrir &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;imagen en una pestaña nueva&lt;/code&gt; para poder ver la ruta de la imagen y a partir de dicha ruta poder acceder a la ruta vulnerable.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a interceptar la petición con el burpsuite y la vamos a llevar al Repeater con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl+R&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso como intentando los métodos anteriores vamos a codear la barra &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/&lt;/code&gt; para ver si así no lo sanea por parte del servidor.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ahora la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/&lt;/code&gt; codeada es &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%2f&lt;/code&gt; y si le enviamos la respuesta nos dice que no existe el fichero.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En este caso vamos a volver a codear la &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/&lt;/code&gt; que nos devuelve codeado &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%25&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a copiar y pegar ese mismo directorio para ir hacia atrás hasta el &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;etc/passwd&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/9.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con esto concluimos el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_sequences_stripped_with_superflous_url_decode/10.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Directory traversal" /><category term="Practitioner" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, traversal sequences stripped with superfluous URL-decode.</summary></entry><entry><title type="html">File path traversal, simple case – PortSwigger Write Up</title><link href="http://localhost:4000/file-path-traversal-simple-case/" rel="alternate" type="text/html" title="File path traversal, simple case – PortSwigger Write Up" /><published>2022-10-18T00:00:00+02:00</published><updated>2022-10-18T00:00:00+02:00</updated><id>http://localhost:4000/file-path-traversal-simple-case</id><content type="html" xml:base="http://localhost:4000/file-path-traversal-simple-case/">&lt;p&gt;En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, simple case.”&lt;/p&gt;
+
+&lt;h2 id=&quot;pasos&quot;&gt;Pasos&lt;/h2&gt;
+
+&lt;p&gt;Cómo nos dice en la descripción del producto tenemos que acceder al directorio /etc/passwd mediante la ruta de las imágenes&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/1.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;En la web que nos aparece es una tienda donde podemos ver los productos, así que vamos a ver un producto.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/2.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a darle a abrir &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;imagen en una pestaña nueva&lt;/code&gt; para poder ver la ruta de la imagen y a partir de dicha ruta poder acceder a la ruta vulnerable.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/3.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/4.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/5.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vamos a interceptar la petición con el burpsuite y la vamos a llevar al Repeater con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl+R&lt;/code&gt;, vamos a ver si retrocediendo los directorios con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;../&lt;/code&gt; múltiples veces llegamos a ver el directorio. Y en la respuesta nos da la solución hemos podido acceder 
+a dicha ruta.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/6.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Con esto concluimos el laboratorio.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/7.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+     &lt;img src=&quot;/assets/images/portswigger/file_path_traversal_simple_case/8.png&quot; width=&quot;1000&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Un saludo y espero que os sirva de apoyo!&lt;/p&gt;</content><author><name>Aitorgg02</name></author><category term="Directory traversal" /><category term="Apprentice" /><summary type="html">En este post vamos a estar resolviendo el laboratorio de PortSwigger: “File path traversal, simple case.</summary></entry></feed>

@@ -9,13 +9,13 @@ classes: wide
 #  teaser_home_page: true
 categories:
   - Portswigger
-  - Authentication
-  - Apprentice
 tags:
   - Burpsuite
   - Login
   - Fuerza bruta
   - Enumeración
+  - Authentication
+  - Apprentice
 ---
 
 En este post vamos a estar resolviendo el laboratorio de PortSwigger: "Username enumeration via different responses."

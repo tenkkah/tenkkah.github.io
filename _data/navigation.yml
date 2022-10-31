@@ -9,5 +9,7 @@ main:
     url: /categories/
   - title: "Etiquetas"
     url: /tags/
+  - title: "CTF"
+    url: /ctf/
   - title: "Buscador"
     url: /buscador/
